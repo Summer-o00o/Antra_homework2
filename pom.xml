@@ -15,6 +15,8 @@
         <module>gateway</module>
         <module>search</module>
         <module>config</module>
+        <module>project2</module>
+        <module>project3</module>
     </modules>
 
     <groupId>com.example</groupId>
@@ -77,6 +79,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
         </dependency>
     </dependencies>
 
