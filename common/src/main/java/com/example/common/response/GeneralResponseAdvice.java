@@ -4,11 +4,13 @@ import com.example.common.domain.GeneralResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+import javax.annotation.PostConstruct;
 import java.util.Date;
 
 @RestControllerAdvice
@@ -19,6 +21,7 @@ public class GeneralResponseAdvice implements ResponseBodyAdvice {
         return true;
     }
 
+
     @Override
     public Object beforeBodyWrite(Object o, MethodParameter methodParameter, MediaType mediaType, Class aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
         GeneralResponse response = new GeneralResponse();
@@ -26,5 +29,10 @@ public class GeneralResponseAdvice implements ResponseBodyAdvice {
         response.setData(o);
         response.setTimestamp(new Date());
         return response;
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("✅ GeneralResponseAdvice is loaded!");
     }
 }
