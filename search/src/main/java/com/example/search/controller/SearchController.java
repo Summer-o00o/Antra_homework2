@@ -21,8 +21,12 @@ public class SearchController {
 
     @GetMapping("/weather/search")
     public ResponseEntity<ResponsePojo> getDetails(@RequestHeader("Authorization") String token) {
-        ResponsePojo responsePojo = searchService.getCombinedData(token);
-
+        //combine data in controller
+        Object students = searchService.getStudents(token);
+        Object details = searchService.getDetails();
+        ResponsePojo responsePojo = new ResponsePojo();
+        responsePojo.setStudentPojos(students);
+        responsePojo.setDetails(details);
         return ResponseEntity.status(200).body(responsePojo);
     }
 }

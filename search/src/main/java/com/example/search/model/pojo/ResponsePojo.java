@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ResponsePojo {
     private Object details;
-    private List<StudentPojo> studentPojos;
+    private Object studentPojos;
 
     public Object getDetails() {
         return details;
@@ -14,11 +14,11 @@ public class ResponsePojo {
         this.details = details;
     }
 
-    public List<StudentPojo> getStudentPojos() {
+    public Object getStudentPojos() {
         return studentPojos;
     }
 
-    public void setStudentPojos(List<StudentPojo> studentPojos) {
+    public void setStudentPojos(Object studentPojos) {
         this.studentPojos = studentPojos;
     }
 }

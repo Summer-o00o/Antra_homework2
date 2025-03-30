@@ -2,6 +2,7 @@ package com.example.search.service;
 
 import com.example.search.model.pojo.ResponsePojo;
 import com.example.search.model.pojo.StudentPojo;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -23,43 +24,46 @@ public class SearchService {
         this.restTemplate = restTemplate;
     }
 
-    public ResponsePojo getCombinedData(String token){
-        CompletableFuture<Object> getDetails = CompletableFuture.supplyAsync(() -> {
-            return getDetails();
+    //has to call methods directly in controller, when put combine data method in service, Hystrix didn't work
+    //has to call method from another Bean!!
+    @HystrixCommand(fallbackMethod = "getDefaultStudents")
+    public Object getStudents(String token) {
+        CompletableFuture<List<StudentPojo>> studentsFuture = CompletableFuture.supplyAsync(() -> {
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.set("Authorization", token);
+            HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
+
+            ResponseEntity<List<StudentPojo>> response = restTemplate.exchange(
+                    "http://PROJECT3/student",
+                    HttpMethod.GET,
+                    httpEntity,
+                    new ParameterizedTypeReference<List<StudentPojo>>() {}
+            );
+
+            List<StudentPojo> students = response.getBody();
+            return students;
         });
-
-        CompletableFuture<List<StudentPojo>> getStudents = CompletableFuture.supplyAsync(() -> {
-            return getStudents(token);
-        });
-
-        ResponsePojo responsePojo = new ResponsePojo();
-        responsePojo.setDetails(getDetails.join());
-        responsePojo.setStudentPojos(getStudents.join());
-
-        return responsePojo;
+        return studentsFuture.join();
     }
 
-    private List<StudentPojo> getStudents(String token){
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("Authorization", token);
-        HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
-
-        ResponseEntity<List<StudentPojo>> response = restTemplate.exchange(
-                "http://PROJECT3/student",
-                HttpMethod.GET,
-                httpEntity,
-                new ParameterizedTypeReference<List<StudentPojo>>() {}
-        );
-
-        List<StudentPojo> students = response.getBody();
-        return students;
+    public Object getDefaultStudents(String token){
+        return "project3 service is down";
     }
 
-    private Object getDetails(){
-        Object details = restTemplate.getForObject(
-                "http://details/details/port",
-                Object.class
-        );
-        return details;
+
+    @HystrixCommand(fallbackMethod = "getDefaultDetails")
+    public Object getDetails(){
+        CompletableFuture<Object> detailsFuture =  CompletableFuture.supplyAsync(() -> {
+            Object details = restTemplate.getForObject(
+                    "http://details/details/port",
+                    Object.class
+            );
+            return details;
+        });
+        return detailsFuture.join();
+    }
+
+    public Object getDefaultDetails(){
+        return "Details service is down";
     }
 }
