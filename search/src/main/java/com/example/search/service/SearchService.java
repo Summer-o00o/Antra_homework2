@@ -1,6 +1,5 @@
 package com.example.search.service;
 
-import com.example.search.model.pojo.ResponsePojo;
 import com.example.search.model.pojo.StudentPojo;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;

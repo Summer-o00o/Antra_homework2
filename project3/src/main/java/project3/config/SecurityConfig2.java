@@ -36,6 +36,17 @@ public class SecurityConfig2 extends WebSecurityConfigurerAdapter {
                 .csrf().disable() // Disable CSRF protection if needed
                 .authorizeRequests()
                 .antMatchers("/auth/login").permitAll()
+                .antMatchers(
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/v2/api-docs",
+                        "/v3/api-docs",
+                        "/swagger-resources/**",
+                        "/configuration/ui",
+                        "/configuration/security",
+                        "/webjars/**"
+                ).permitAll()
+                .antMatchers("/actuator/prometheus").permitAll()
                 .antMatchers("/registration/**").hasRole("ADMIN")
                 .antMatchers("/student/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
