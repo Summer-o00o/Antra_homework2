@@ -29,6 +29,7 @@
 **26. download splunk adn splunk universal forwarder, follow the step to set up localhost port :8000**
 
 **27. start the splunk, open splunk, in setting - forwarding and receiving, add new receiving port: 9997**
+
 28. create logback-spring.xml file for each microservice for Lockback to log a file
 29. create and config inputs (index, source type, log file path...) and outputs.conf (server port) file (splunk/etc/system/local)
 30. restart splunk universal forwarder, in splunk search and reports, search index = "homework2"
